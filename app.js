@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
 const port = 5000;
@@ -10,6 +11,7 @@ let campgrounds = [
 ]
 
 app.set("view engine", "ejs");
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
     res.render("landing");
@@ -18,6 +20,14 @@ app.get('/', (req, res) => {
 // Getting all the camp grounds
 app.get('/campgrounds', (req, res) => {
     res.render("campgrounds", {campgrounds});
+});
+
+app.post('/campgrounds', (req, res) => {
+    let name = req.body.name;
+    let image = req.body.image;
+    let campground = {name, image};
+    campgrounds.push(campground);
+    res.redirect("/campgrounds");
 });
 
 app.listen(port, () => console.log(`Yelp Camp is running on http://127.0.0.1:${port}`));

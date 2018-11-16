@@ -1,5 +1,17 @@
+<% include partials/header %>
+
 <h1>All the Camp Grounds</h1>
 <% campgrounds.forEach((campground) => { %>
     <h4><%= campground.name %></h4>
     <img src="<%= campground.image %>" alt="<%= campground.name %>">
 <% }) %>
+
+<hr>
+
+<form action="/campgrounds" method="POST">
+    <input type="text" name="name" placeholder="Name of campground">
+    <input type="text" name="image" placeholder="image source url">
+    <input type="submit" value="Add Camp Ground">
+</form>
+
+<% include partials/footer %>
