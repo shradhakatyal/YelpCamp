@@ -1,17 +1,28 @@
 <% include partials/header %>
 
-<h1>All the Camp Grounds</h1>
-<% campgrounds.forEach((campground) => { %>
-    <h4><%= campground.name %></h4>
-    <img src="<%= campground.image %>" alt="<%= campground.name %>">
-<% }) %>
-
-<hr>
-
-<form action="/campgrounds" method="POST">
-    <input type="text" name="name" placeholder="Name of campground">
-    <input type="text" name="image" placeholder="image source url">
-    <input type="submit" value="Add Camp Ground">
-</form>
+<div class="container">
+    <header class="jumbotron">
+        <h1>Welcome to YelpCamp!</h1>
+        <p>View our hand-picked campgrounds</p>
+        <p>
+            <a class="btn btn-primary btn-lg" href="/campgrounds/new">Add new Campground</a>
+        </p>
+    </header>
+    <div class="row">
+        <div class="col-lg-12">
+            <h3>Our most famous campgrounds</h3>
+        </div>
+    </div>
+    <div class="row text-center" style="display: flex; flex-wrap: wrap;">
+    <% campgrounds.forEach((campground) => { %>
+        <div class="col-md-4 col-sm-6">
+            <div class="thumbnail">
+            <img src="<%= campground.image %>" alt="<%= campground.name %>">
+            <div class="caption"><h4><%= campground.name %></h4></div>
+            </div>
+        </div>
+        <% }) %>
+    </div>
+</div>
 
 <% include partials/footer %>
