@@ -9,12 +9,15 @@
     <div class="row">
         <img src="<%= campground.image %>" alt="<%= campground.name %>">
     </div>
+    
     <p><%= campground.description %></p>
+    <p><a class="btn btn-success" href="<%= campground._id %>/comments/new">Add comment</a></p>
     <% campground.comments.forEach((comment) => { %>
         <p>
         <strong><%= comment.author %></strong>
          - <%= comment.text %></p>
     <% })%>
+    
 </div>
 
 <% include ../partials/footer %>

@@ -80,6 +80,7 @@ app.post('/campgrounds/:id/comments', (req, res) => {
     Campground.findById(req.params.id, (err, cg) => {
         if(err) {
             console.log(err);
+            res.redirect("/campgrounds");
         } else {
             Comment.create(req.body.comment, (err, comment) => {
                 if(err) {
@@ -87,7 +88,7 @@ app.post('/campgrounds/:id/comments', (req, res) => {
                 } else {
                     cg.comments.push(comment);
                     cg.save();
-                    res.redirect("/campgrounds");
+                    res.redirect("/campgrounds/"+ cg._id);
                 }
             });
         }
