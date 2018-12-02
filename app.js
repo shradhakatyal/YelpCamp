@@ -2,6 +2,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const express = require('express');
 const Campground = require('./models/campground');
+const Comment = require('./models/comment');
 const seedDB = require('./seeds');
 
 mongoose.connect("mongodb://localhost/yelp_camp", { useNewUrlParser: true });
@@ -24,21 +25,22 @@ app.get('/campgrounds', (req, res) => {
         if(err) {
             res.json({err});
         } else {
-            res.render("campgrounds", {campgrounds});
+            res.render("campgrounds/campgrounds", {campgrounds});
         }
     });
 });
 
 app.get('/campgrounds/new', (req, res) => {
-    res.render("new");
+    res.render("campgrounds/new");
 });
 
 app.get('/campgrounds/:id', (req, res) => {
-    Campground.findById(req.params.id, (err, campground) => {
+    Campground.findById(req.params.id).populate("comments").exec((err, foundCampground) => {
         if(err) {
             console.log(err);
         } else {
-            res.render("show", {campground});
+            console.log(foundCampground);
+            res.render("campgrounds/show", {campground: foundCampground});
         }
     });
 });
@@ -57,6 +59,39 @@ app.post('/campgrounds', (req, res) => {
             res.redirect("/campgrounds");
         }
     });
+});
+
+// ========================
+// COMMENTS ROUTE
+// ========================
+
+app.get('/campgrounds/:id/comments/new', (req, res) => {
+    Campground.findById(req.params.id, (err, campground) => {
+        if(!err) {
+            res.render("comments/new", {campground});
+        }
+    });
+    
+});
+
+app.post('/campgrounds/:id/comments', (req, res) => {
+    // console.log(req.body.comment);
+    // res.redirect('/campgrounds/'+req.params._id);
+    Campground.findById(req.params.id, (err, cg) => {
+        if(err) {
+            console.log(err);
+        } else {
+            Comment.create(req.body.comment, (err, comment) => {
+                if(err) {
+                    console.log(err);
+                } else {
+                    cg.comments.push(comment);
+                    cg.save();
+                    res.redirect("/campgrounds");
+                }
+            });
+        }
+    })
 });
 
 app.listen(port, () => console.log(`Yelp Camp is running on http://127.0.0.1:${port}`));
